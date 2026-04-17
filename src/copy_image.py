@@ -21,6 +21,15 @@ FORMATS = [
     (b"\xff\xd8\xff", "public.jpeg"),
 ]
 
+# Extension is load-bearing: Snapchat, Discord, and most web-based upload
+# handlers infer MIME type from the filename suffix and reject files
+# without a recognized extension.
+EXT_BY_UTI = {
+    "com.compuserve.gif": ".gif",
+    "public.png": ".png",
+    "public.jpeg": ".jpg",
+}
+
 # JXA script: writes one NSPasteboardItem carrying two UTIs —
 # public.file-url and the image-bytes UTI — so each paste target
 # picks whichever flavor it knows how to read.
@@ -57,21 +66,32 @@ def main():
         sys.exit(1)
 
     name = hashlib.sha1(url.encode()).hexdigest()
-    path = Path(tempfile.gettempdir()) / f"giffr-{name}"
-    if not path.exists():
-        urllib.request.urlretrieve(url, path)
+    tmpdir = Path(tempfile.gettempdir())
 
-    uti = detect_uti(path)
-    if uti is None:
-        png_path = path.with_suffix(".png")
-        subprocess.run(
-            ["sips", "-s", "format", "png", str(path), "--out", str(png_path)],
-            check=True,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-        path = png_path
-        uti = "public.png"
+    path, uti = None, None
+    for cached_uti, ext in EXT_BY_UTI.items():
+        cached = tmpdir / f"giffr-{name}{ext}"
+        if cached.exists():
+            path, uti = cached, cached_uti
+            break
+
+    if path is None:
+        raw = tmpdir / f"giffr-{name}.tmp"
+        urllib.request.urlretrieve(url, raw)
+        uti = detect_uti(raw)
+        if uti is None:
+            path = tmpdir / f"giffr-{name}.png"
+            subprocess.run(
+                ["sips", "-s", "format", "png", str(raw), "--out", str(path)],
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            raw.unlink()
+            uti = "public.png"
+        else:
+            path = tmpdir / f"giffr-{name}{EXT_BY_UTI[uti]}"
+            raw.rename(path)
 
     subprocess.run(
         ["osascript", "-l", "JavaScript", "-e", JXA, str(path), uti],
