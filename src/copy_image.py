@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Download an image at argv[1] and copy its raw bytes to the macOS clipboard.
+"""Download an image at argv[1] and copy it to the macOS clipboard in two
+representations at once: `public.file-url` (so Snapchat / Discord / Slack
+treat it like a dragged file and preserve animation) and raw image bytes
+under the matching UTI (so Messages / Notes / Mail paste it inline).
 
-Detects GIF / PNG / JPEG via magic bytes and uses the matching `«class …»`
-clipboard type. Unknown formats are converted to PNG with the system `sips`
-tool so pasting still works in apps that expect image bytes (Messages, Notes).
+Format is detected from magic bytes. Unknown formats fall through the
+built-in `sips` tool and are copied as PNG.
 """
 import hashlib
 import subprocess
@@ -13,19 +15,38 @@ import urllib.request
 from pathlib import Path
 
 FORMATS = [
-    (b"GIF87a", "GIFf"),
-    (b"GIF89a", "GIFf"),
-    (b"\x89PNG\r\n\x1a\n", "PNGf"),
-    (b"\xff\xd8\xff", "JPEG"),
+    (b"GIF87a", "com.compuserve.gif"),
+    (b"GIF89a", "com.compuserve.gif"),
+    (b"\x89PNG\r\n\x1a\n", "public.png"),
+    (b"\xff\xd8\xff", "public.jpeg"),
 ]
 
+# JXA script: writes one NSPasteboardItem carrying two UTIs —
+# public.file-url and the image-bytes UTI — so each paste target
+# picks whichever flavor it knows how to read.
+JXA = r"""
+function run(argv) {
+    ObjC.import('AppKit');
+    const [path, uti] = argv;
+    const pb = $.NSPasteboard.generalPasteboard;
+    pb.clearContents;
+    const item = $.NSPasteboardItem.alloc.init;
+    const fileURL = $.NSURL.fileURLWithPath(path);
+    item.setStringForType(fileURL.absoluteString.js, 'public.file-url');
+    const data = $.NSData.dataWithContentsOfFile(path);
+    item.setDataForType(data, uti);
+    // $([item]) forces a JS array -> NSArray; a bare [item] bridges to NSDictionary and throws.
+    pb.writeObjects($([item]));
+}
+"""
 
-def detect_class(path):
+
+def detect_uti(path):
     with open(path, "rb") as f:
         head = f.read(8)
-    for sig, klass in FORMATS:
+    for sig, uti in FORMATS:
         if head.startswith(sig):
-            return klass
+            return uti
     return None
 
 
@@ -40,8 +61,8 @@ def main():
     if not path.exists():
         urllib.request.urlretrieve(url, path)
 
-    klass = detect_class(path)
-    if klass is None:
+    uti = detect_uti(path)
+    if uti is None:
         png_path = path.with_suffix(".png")
         subprocess.run(
             ["sips", "-s", "format", "png", str(path), "--out", str(png_path)],
@@ -50,10 +71,12 @@ def main():
             stderr=subprocess.DEVNULL,
         )
         path = png_path
-        klass = "PNGf"
+        uti = "public.png"
 
-    script = f'set the clipboard to (read (POSIX file "{path}") as «class {klass}»)'
-    subprocess.run(["osascript", "-e", script], check=True)
+    subprocess.run(
+        ["osascript", "-l", "JavaScript", "-e", JXA, str(path), uti],
+        check=True,
+    )
     print(url)
 
 
