@@ -1,9 +1,10 @@
 # giffr
 
-Alfred workflow to search and copy GIFs & memes, powered by [Tenor](https://tenor.com/gifapi).
+Alfred workflow to search and copy GIFs & memes from the macOS launcher.
 
-- Fast keyword-driven search from Alfred.
-- Copy GIF URL, raw image bytes, or a Markdown embed — pick with a modifier key.
+- **GIFs** come from [Giphy](https://developers.giphy.com/).
+- **Memes** come from [Imgur](https://apidocs.imgur.com/).
+- Copy URL, raw image bytes, or a Markdown embed — pick with a modifier key.
 - Zero Python dependencies (uses only the macOS-bundled Python 3 standard library).
 
 ## Install
@@ -13,28 +14,42 @@ Alfred workflow to search and copy GIFs & memes, powered by [Tenor](https://teno
 
 ## Setup
 
-You need a free Tenor API key:
+You need two free credentials, one per provider:
 
-1. Go to [Google Cloud Console → Tenor API](https://developers.google.com/tenor/guides/quickstart) and create an API key.
-2. In Alfred, open **Workflows → giffr → Configure Workflow** (the `[x]` icon at the top right).
-3. Paste the key into the `TENOR_API_KEY` field and save.
+### Giphy API key
 
-Your key is stored locally in Alfred's workflow configuration and is never committed to this repo.
+1. Create an app at the [Giphy developer dashboard](https://developers.giphy.com/dashboard) (free, instant).
+2. Copy the generated **API Key**.
+
+The default beta key is rate-limited to 42 requests/hour; request production access (also free) when you hit the limit.
+
+### Imgur Client ID
+
+1. Register an app at [api.imgur.com/oauth2/addclient](https://api.imgur.com/oauth2/addclient) — pick **OAuth 2 authorization without a callback URL**.
+2. Copy the generated **Client ID** (not the secret — giffr doesn't need it).
+
+### Paste into Alfred
+
+In Alfred, open **Workflows → giffr → Configure Workflow** (the `[x]` icon at the top right) and paste both values into the `GIPHY_API_KEY` and `IMGUR_CLIENT_ID` fields.
+
+Both keys are stored locally in Alfred's workflow configuration and are marked `don't export`, so they're never committed to this repo or leaked if you share the workflow.
 
 ## Usage
 
-| Keyword        | What it does                                |
-|----------------|---------------------------------------------|
-| `gif <query>`  | Search Tenor for GIFs matching the query.   |
-| `meme <query>` | Same search, biased toward meme-style GIFs. |
+| Keyword        | Backend | What it does                       |
+|----------------|---------|------------------------------------|
+| `gif <query>`  | Giphy   | Search for GIFs.                   |
+| `meme <query>` | Imgur   | Search Imgur gallery for `<query> meme`. |
 
 On any result:
 
 | Key          | Action                                               |
 |--------------|------------------------------------------------------|
-| `Enter`      | Copy the GIF URL (auto-embeds in Slack, Discord).    |
-| `⌘ Enter`    | Copy GIF image bytes (paste into Messages, Notes).   |
+| `Enter`      | Copy the URL (auto-embeds in Slack, Discord).        |
+| `⌘ Enter`    | Copy raw image bytes (paste into Messages, Notes).   |
 | `⌥ Enter`    | Copy as Markdown: `![](url)`.                        |
+
+`⌘ Enter` handles GIF, PNG, and JPEG natively; anything else is transparently converted to PNG via the built-in `sips` tool before copying.
 
 ## Development
 
@@ -42,9 +57,9 @@ Source lives in `src/`. Scripts are plain Python 3 and use only the standard lib
 
 ```
 src/
-├── search.py         # Tenor search → Alfred script filter JSON
+├── search.py         # Provider dispatch (Giphy/Imgur) → Alfred script filter JSON
 ├── copy_url.py       # copy URL action
-├── copy_image.py     # download + copy image bytes action
+├── copy_image.py     # download + copy image bytes (format-aware)
 └── copy_markdown.py  # copy Markdown embed action
 ```
 
@@ -59,9 +74,13 @@ Attach the resulting file to a GitHub Release.
 ## Roadmap
 
 - Favorites / recent history.
-- Sticker support (Tenor sticker endpoint).
-- Giphy fallback provider.
+- Sticker support (Giphy sticker endpoint).
+- Tenor fallback provider.
 - Raycast port.
+
+## Attribution
+
+Giphy requires a visible "Powered by GIPHY" attribution on results; it's included in every GIF result's subtitle. Imgur asks for a link back in published material.
 
 ## License
 
