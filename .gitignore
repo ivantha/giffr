@@ -1,8 +1,33 @@
+# Secrets
 .env
+.env.*
 *.key
 secrets*
-.DS_Store
+
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# macOS
+.DS_Store
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build artifacts
 build/
+dist/
 *.alfredworkflow
