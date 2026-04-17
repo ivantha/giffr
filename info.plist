@@ -78,7 +78,7 @@
 	<key>createdby</key>
 	<string>ivantha</string>
 	<key>description</key>
-	<string>Search and copy GIFs (Giphy) &amp; memes (Imgur).</string>
+	<string>Search and copy GIFs &amp; memes via Giphy.</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
@@ -111,7 +111,7 @@
 				<key>runningsubtext</key>
 				<string>Searching Tenor…</string>
 				<key>script</key>
-				<string>GIFFR_PROVIDER=giphy /usr/bin/python3 "$PWD/src/search.py" "$1"</string>
+				<string>/usr/bin/python3 "$PWD/src/search.py" "$1"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -158,13 +158,13 @@
 				<key>runningsubtext</key>
 				<string>Searching Tenor…</string>
 				<key>script</key>
-				<string>GIFFR_PROVIDER=imgur /usr/bin/python3 "$PWD/src/search.py" "$1"</string>
+				<string>GIFFR_MODE=meme /usr/bin/python3 "$PWD/src/search.py" "$1"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string>Search Imgur for a meme</string>
+				<string>Search Giphy for a meme</string>
 				<key>title</key>
 				<string>Search Memes</string>
 				<key>type</key>
@@ -250,19 +250,19 @@
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>giffr — search and copy GIFs &amp; memes.
+	<string>giffr — search and copy GIFs &amp; memes via Giphy.
 
 Keywords:
   gif &lt;query&gt;   Search Giphy for GIFs.
-  meme &lt;query&gt;  Search Imgur for memes.
+  meme &lt;query&gt;  Same search, biased toward memes.
 
 Modifiers on Enter:
   Enter   copy URL
   ⌘Enter  copy image bytes
   ⌥Enter  copy Markdown embed
 
-Set your Giphy API key and Imgur Client ID in the workflow's Configure UI
-before first use. See https://github.com/ivantha/giffr for details.</string>
+Set your Giphy API key in the workflow's Configure UI before first use.
+See https://github.com/ivantha/giffr for details.</string>
 	<key>uidata</key>
 	<dict>
 		<key>A1111111-1111-1111-1111-111111111111</key>
@@ -324,39 +324,15 @@ before first use. See https://github.com/ivantha/giffr for details.</string>
 			<key>variable</key>
 			<string>GIPHY_API_KEY</string>
 		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>default</key>
-				<string></string>
-				<key>placeholder</key>
-				<string>Your Imgur Client ID</string>
-				<key>required</key>
-				<true/>
-				<key>trim</key>
-				<true/>
-			</dict>
-			<key>description</key>
-			<string>Register an app at https://api.imgur.com/oauth2/addclient (OAuth 2 without callback)</string>
-			<key>label</key>
-			<string>Imgur Client ID</string>
-			<key>type</key>
-			<string>textfield</string>
-			<key>variable</key>
-			<string>IMGUR_CLIENT_ID</string>
-		</dict>
 	</array>
 	<key>variables</key>
 	<dict>
 		<key>GIPHY_API_KEY</key>
 		<string></string>
-		<key>IMGUR_CLIENT_ID</key>
-		<string></string>
 	</dict>
 	<key>variablesdontexport</key>
 	<array>
 		<string>GIPHY_API_KEY</string>
-		<string>IMGUR_CLIENT_ID</string>
 	</array>
 	<key>version</key>
 	<string>0.1.0</string>
