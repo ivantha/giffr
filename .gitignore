@@ -1,0 +1,8 @@
+.env
+*.key
+secrets*
+.DS_Store
+__pycache__/
+*.pyc
+build/
+*.alfredworkflow
