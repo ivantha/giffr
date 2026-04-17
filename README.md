@@ -31,13 +31,13 @@ Your key is stored locally in Alfred's workflow configuration and is marked `don
 
 On any result:
 
-| Key          | Action                                               |
-|--------------|------------------------------------------------------|
-| `Enter`      | Copy the URL (auto-embeds in Slack, Discord).        |
-| `⌘ Enter`    | Copy raw image bytes (paste into Messages, Notes).   |
-| `⌥ Enter`    | Copy as Markdown: `![](url)`.                        |
+| Key          | Action                                                             |
+|--------------|--------------------------------------------------------------------|
+| `Enter`      | Copy raw GIF bytes (paste into Messages, Notes, etc.).             |
+| `⌘ Enter`    | Copy the URL (auto-embeds in Slack, Discord).                      |
+| `⌥ Enter`    | Copy as Markdown: `![](url)`.                                      |
 
-`⌘ Enter` detects GIF / PNG / JPEG via magic bytes; unknown formats are transparently converted to PNG via the built-in `sips` tool before copying.
+`Enter` detects GIF / PNG / JPEG via magic bytes; unknown formats are transparently converted to PNG via the built-in `sips` tool before copying.
 
 ## Development
 
