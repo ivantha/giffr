@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" shape-rendering="crispEdges">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#7C3AED"/>
+      <stop offset="35%"  stop-color="#EC4899"/>
+      <stop offset="70%"  stop-color="#F97316"/>
+      <stop offset="100%" stop-color="#FACC15"/>
+    </linearGradient>
+    <clipPath id="squircle">
+      <rect x="0" y="0" width="1024" height="1024" rx="225" ry="225"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#squircle)">
+    <rect x="0" y="0" width="1024" height="1024" fill="url(#bg)"/>
+
+    <!-- Lowercase 'g' (single-story), white, optically centered -->
+    <!-- Bowl: annulus, outer r=230, inner r=140, center (475, 470) -->
+    <path fill="#FFFFFF" fill-rule="evenodd"
+          d="M 705,470
+             A 230,230 0 1,1 245,470
+             A 230,230 0 1,1 705,470 Z
+             M 615,470
+             A 140,140 0 1,0 335,470
+             A 140,140 0 1,0 615,470 Z"/>
+
+    <!-- Descender: stroked stem with hooked terminal, aligned with bowl's right side -->
+    <path fill="none" stroke="#FFFFFF" stroke-width="90"
+          stroke-linecap="round" stroke-linejoin="round"
+          d="M 660,470 L 660,780 Q 660,830 600,830"/>
+  </g>
+</svg>

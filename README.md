@@ -54,6 +54,8 @@ src/
 └── copy_markdown.py  # copy Markdown embed action
 ```
 
+The icon lives in `icon.png` at the repo root and is generated from `assets/icon.svg` via `bash assets/build_icon.sh` (requires `rsvg-convert`). Edit the SVG, rerun the script, commit both.
+
 Alfred's workflow definition lives in `info.plist`. To build a shippable `.alfredworkflow`:
 
 ```sh
