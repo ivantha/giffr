@@ -62,9 +62,10 @@ def search_giphy(query, api_key):
         items.append({
             "uid": result.get("id", gif_url),
             "title": title,
-            "subtitle": "Enter: copy GIF   ⌘: copy URL   ⌥: copy Markdown   (Powered by GIPHY)",
+            "subtitle": "↩ copy GIF   ⌘↩ URL   ⌥↩ Markdown   ⇧ large preview   (Powered by GIPHY)",
             "arg": gif_url,
             "icon": {"path": cache_thumbnail(preview) or "icon.png"},
+            "quicklookurl": gif_url,
             "mods": {
                 "cmd": {"arg": gif_url, "subtitle": "Copy URL to clipboard"},
                 "alt": {"arg": markdown, "subtitle": f"Copy Markdown: {markdown}"},

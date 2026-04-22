@@ -36,6 +36,9 @@ On any result:
 | `Enter`      | Copy raw GIF bytes (paste into Messages, Notes, etc.).             |
 | `⌘ Enter`    | Copy the URL (auto-embeds in Slack, Discord).                      |
 | `⌥ Enter`    | Copy as Markdown: `![](url)`.                                      |
+| `Shift`      | Quick Look — large animated preview next to the results.           |
+
+For the Quick Look panel to pop up automatically as you arrow through results (instead of only when you press Shift), turn on Alfred → Preferences → Features → Default Results → **"Show Quick Look previews automatically"**.
 
 `Enter` detects GIF / PNG / JPEG via magic bytes; unknown formats are transparently converted to PNG via the built-in `sips` tool before copying.
 

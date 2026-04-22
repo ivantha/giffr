@@ -256,10 +256,13 @@ Keywords:
   gif &lt;query&gt;   Search Giphy for GIFs.
   meme &lt;query&gt;  Same search, biased toward memes.
 
-Modifiers on Enter:
+Modifiers on a result:
   Enter   copy GIF bytes
   ⌘Enter  copy URL
   ⌥Enter  copy Markdown embed
+  Shift   Quick Look — large animated preview next to results
+          (tip: enable auto-preview in Alfred → Features → Default
+           Results → "Show Quick Look previews automatically")
 
 Set your Giphy API key in the workflow's Configure UI before first use.
 See https://github.com/ivantha/giffr for details.</string>
